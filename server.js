@@ -1,12 +1,28 @@
-import express from "express";      // Requisição do pacote do express
-const app = express();              // Instancia o Express
-const port = 3000;                  // Define a porta
+import express from "express"; 
+import pkg from "pg";
+import dotenv from "dotenv";     // Requisição do pacote do express
 
-app.get("/", (req, res) => {        // Cria endpoint na rota da raiz do projeto
+const app = express();              // Instancia o Express
+const port = 3000;              // Define a porta
+dotenv.config();         
+const { Pool } = pkg; 
+
+app.get("/", async (req, res) => {        // Cria endpoint na rota da raiz do projeto
   console.log("Rota GET / solicitada");
+   const db = new Pool({  
+  connectionString: process.env.URL_BD,
+});
+
+let dbStatus = "ok";
+try {
+  await db.query("SELECT 1");
+} catch (e) {
+  dbStatus = e.message;
+}
   res.json({
 		message: "API para realizar as atividades",      // Substitua pelo conteúdo da sua API
     author: "Lívia Santos Ventura",    // Substitua pelo seu nome
+    statusBD: dbStatus
   });
 });
 
