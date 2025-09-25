@@ -47,9 +47,7 @@ app.get("/questoes", async (req, res) => {
   //server.js
   const db = conectarBD(); // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
   console.log("Rota GET /questoes solicitada"); // Log no terminal para indicar que a rota foi acessada
-
-  const { Pool } = pkg; // Obtém o construtor Pool do pacote pg para gerenciar conexões com o banco de dados PostgreSQL
-
+""
   try {
     const resultado = await db.query("SELECT * FROM questoes"); // Executa uma consulta SQL para selecionar todas as questões
     const dados = resultado.rows; // Obtém as linhas retornadas pela consulta
