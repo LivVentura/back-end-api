@@ -1,31 +1,64 @@
-import express from "express"; 
-import pkg from "pg";
-import dotenv from "dotenv";     // Requisição do pacote do express
+import express from "express"; // Requisição do pacote do express
+import pkg from "pg"; // Requisição do pacote do pg (PostgreSQL)
+import dotenv from "dotenv"; // Importa o pacote dotenv para carregar variáveis de ambiente
 
-const app = express();              // Instancia o Express
-const port = 3000;              // Define a porta
-dotenv.config();         
-const { Pool } = pkg; 
+const app = express(); // Inicializa o servidor Express
+const port = 3000; // Define a porta onde o servidor irá escutar
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
+const { Pool } = pkg; // Obtém o construtor Pool do pacote pg para gerenciar conexões com o banco de dados PostgreSQL
 
-app.get("/", async (req, res) => {        // Cria endpoint na rota da raiz do projeto
-  console.log("Rota GET / solicitada");
-   const db = new Pool({  
-  connectionString: process.env.URL_BD,
-});
 
-let dbStatus = "ok";
-try {
-  await db.query("SELECT 1");
-} catch (e) {
-  dbStatus = e.message;
-}
+app.get("/", async (req, res) => {
+  console.log("Rota GET / solicitada"); // Log no terminal para indicar que a rota foi acessada
+
+  const db = new Pool({
+    // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
+    connectionString: process.env.URL_BD, // Usa a variável de ambiente do arquivo .env DATABASE_URL para a string de conexão
+  });
+
+  let dbStatus = "ok";
+
+  // Tenta executar uma consulta simples para verificar a conexão com o banco de dados
+  // Se a consulta falhar, captura o erro e define o status do banco de dados como a mensagem de erro
+  try {
+    await db.query("SELECT 1");
+  } catch (e) {
+    dbStatus = e.message;
+  }
+
+  // Responde com um JSON contendo uma mensagem, o nome do autor e o status da conexão com o banco de dados
   res.json({
-		message: "API para realizar as atividades",      // Substitua pelo conteúdo da sua API
-    author: "Lívia Santos Ventura",    // Substitua pelo seu nome
-    statusBD: dbStatus
+    message: "API para realizar as atividades", 
+    author: "Lívia Santos Ventura", 
+    dbStatus: dbStatus,
   });
 });
 
-app.listen(port, () => {            // Um socket para "escutar" as requisições
+app.get("/questoes", async (req, res) => {
+	console.log("Rota GET /questoes solicitada"); // Log no terminal para indicar que a rota foi acessada
+	
+  const { Pool } = pkg; // Obtém o construtor Pool do pacote pg para gerenciar conexões com o banco de dados PostgreSQL
+
+  const db = new Pool({
+    // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
+    connectionString: process.env.URL_BD, // Usa a variável de ambiente do arquivo .env DATABASE_URL para a string de conexão
+  });
+
+  try {
+      const resultado = await db.query("SELECT * FROM questoes"); // Executa uma consulta SQL para selecionar todas as questões
+      const dados = resultado.rows; // Obtém as linhas retornadas pela consulta
+      res.json(dados); // Retorna o resultado da consulta como JSON
+    } catch (e) {
+      console.error("Erro ao buscar questões:", e); // Log do erro no servidor
+      res.status(500).json({
+        erro: "Erro interno do servidor",
+        mensagem: "Não foi possível buscar as questões",
+    });
+  }
+});
+
+app.listen(port, () => {
+  // Inicia o servidor na porta definida
+  // Um socket para "escutar" as requisições
   console.log(`Serviço rodando na porta:  ${port}`);
 });
