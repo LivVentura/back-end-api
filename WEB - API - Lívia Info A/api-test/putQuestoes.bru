@@ -1,0 +1,20 @@
+meta {
+  name: putQuestoes
+  type: http
+  seq: 10
+}
+
+put {
+  url: https://laughing-space-bassoon-69wj4p6v4xww25rgx-3000.app.github.dev/questoes/2
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "enunciado": "Qual é a capital da Bélgica?",
+    "disciplina": "Geografia",
+    "tema": "Capitais do mundo",
+    "nivel": 3
+  }
+}
