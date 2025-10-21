@@ -1,0 +1,25 @@
+meta {
+  name: putQuestoesVercel
+  type: http
+  seq: 9
+}
+
+put {
+  url: https://back-end-api-black.vercel.app/questoes/5
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "enunciado": "Qual é a capital da Bélgica?",
+    "disciplina": "Geografia",
+    "tema": "Capitais do mundo",
+    "nivel": 3
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
