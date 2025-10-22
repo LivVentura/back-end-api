@@ -251,7 +251,7 @@ app.delete("/imagens/:id", async (req, res) => {
 
     // Verifica se a questão foi encontrada
     if (dados.length === 0) {
-      return res.status(404).json({ mensagem: "Imagem não encontrada" }); // Retorna erro 404 se a questão não for encontrada
+      return res.status(404).json({ mensagem: "Imagem não encontrada" }); // Retorna erro 404 
     }
 
     consulta = "DELETE FROM imagens WHERE id = $1"; // Consulta SQL para deletar a questão pelo ID
@@ -301,21 +301,21 @@ app.put("/imagens/:id", async (req, res) => {
   try {
     const id = req.params.id; // Obtém o ID da questão a partir dos parâmetros da URL
     const db = conectarBD(); // Conecta ao banco de dados
-    let consulta = "SELECT * FROM imagens WHERE id = $1"; // Consulta SQL para selecionar a questão pelo ID
+    let consulta = "SELECT * FROM imagens WHERE id = $1"; // Consulta SQL para selecionar a imagem pelo ID
     let resultado = await db.query(consulta, [id]); // Executa a consulta SQL com o ID fornecido
     let imagem = resultado.rows; // Obtém as linhas retornadas pela consulta
 
-    // Verifica se a questão foi encontrada
+
     if (questao.length === 0) {
-      return res.status(404).json({ message: "Imagem não encontrada" }); // Retorna erro 404 se a questão não for encontrada
+      return res.status(404).json({ message: "Imagem não encontrada" }); 
     }
 
     const data = req.body; // Obtém os dados do corpo da requisição
 
     // Usa o valor enviado ou mantém o valor atual do banco
-    data.link_imagem = data.link_imagem || questao[0].link_imagem;
+    data.link_imagem = data.link_imagem || imagem[0].link_imagem;
     
-    // Atualiza a questão
+    // Atualiza a imagem
     consulta ="UPDATE imagens SET link_imagem = $1";
     // Executa a consulta SQL com os valores fornecidos
     resultado = await db.query(consulta, [
