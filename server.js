@@ -306,7 +306,7 @@ app.put("/imagens/:id", async (req, res) => {
     let imagem = resultado.rows; // Obtém as linhas retornadas pela consulta
 
 
-    if (questao.length === 0) {
+    if (imagem.length === 0) {
       return res.status(404).json({ message: "Imagem não encontrada" }); 
     }
 
