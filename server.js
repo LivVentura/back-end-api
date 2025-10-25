@@ -299,7 +299,7 @@ app.put("/imagens/:id", async (req, res) => {
   console.log("Rota PUT /imagens solicitada"); // Log no terminal para indicar que a rota foi acessada
 
   try {
-    const id = req.params.id; // Obtém o ID da questão a partir dos parâmetros da URL
+    const id = req.params.id; // Obtém o ID da imagem a partir dos parâmetros da URL
     const db = conectarBD(); // Conecta ao banco de dados
     let consulta = "SELECT * FROM imagens WHERE id = $1"; // Consulta SQL para selecionar a imagem pelo ID
     let resultado = await db.query(consulta, [id]); // Executa a consulta SQL com o ID fornecido
@@ -316,7 +316,7 @@ app.put("/imagens/:id", async (req, res) => {
     data.link_imagem = data.link_imagem || imagem[0].link_imagem;
     
     // Atualiza a imagem
-    consulta ="UPDATE imagens SET link_imagem = $1";
+    consulta ="UPDATE imagens SET link_imagem = $1 WHERE id = $2";
     // Executa a consulta SQL com os valores fornecidos
     resultado = await db.query(consulta, [
       data.link_imagem,
@@ -325,9 +325,9 @@ app.put("/imagens/:id", async (req, res) => {
 
     res.status(200).json({ message: "Imagem atualizada com sucesso!" }); // Retorna o resultado da consulta como JSON
   } catch (e) {
-    console.error("Erro ao atualizar imagem:", e); // Log do erro no servidor
+    console.error("Erro ao atualizar imagem:", e.message); // Log do erro no servidor
     res.status(500).json({
-      erro: "Erro interno do servidor",
+      erro: e.message,
     });
   }
 });
